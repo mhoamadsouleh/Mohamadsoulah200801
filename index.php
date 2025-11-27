@@ -1,9 +1,10 @@
-
 <?php
+// بداية الملف مباشرة بدون مسافات
+ob_start(); // بدء buffer لحل مشكلة headers
+
 // إعدادات للأمان والعرض على Vercel
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-header('Content-Type: application/json');
 
 // الحصول على الرابط الديناميكي لـ Vercel
 function getWebhookUrl() {
@@ -502,136 +503,29 @@ function format_sim_card_info($sim_info) {
 }
 
 // وظائف تفعيل العروض الكاملة
-function send_subscription_product1_request($access_token, $msisdn) {
+function send_subscription_request($access_token, $msisdn, $product_id, $headers_config) {
     $url = DJEZZY_BASE_URL . "/djezzy-api/api/v1/subscribers/$msisdn/subscription-product?include=";
     
-    $headers = [
-        "Content-Type: application/json",
-        "Authorization: Bearer $access_token",
-        "User-Agent: Dalvik/2.1.0 (Linux; U; Android 8.0; OS-G23 Build/MRA58K)",
-        "Host: apim.djezzy.dz",
-        "x-csrf-token: " . CSRF_TOKEN_SUBSCRIPTION,
-        "Connection: Keep-Alive",
-        "Accept-Encoding: gzip"
-    ];
-    
+    $headers = $headers_config;
+    $headers[] = "Authorization: Bearer $access_token";
+
     $data = [
         "data" => [
-            "id" => "GIFTWALKWIN",
-            "type" => "products",
-            "meta" => [
-                "services" => [
-                    "steps" => 10000,
-                    "code" => "GIFTWALKWIN2GO",
-                    "id" => "WALKWIN"
-                ]
+            "id" => $product_id,
+            "type" => "products"
+        ]
+    ];
+
+    // إضافة meta data لبعض المنتجات الخاصة
+    if ($product_id === "GIFTWALKWIN") {
+        $data["data"]["meta"] = [
+            "services" => [
+                "steps" => 10000,
+                "code" => "GIFTWALKWIN2GO",
+                "id" => "WALKWIN"
             ]
-        ]
-    ];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    
-    return $http_code == 200;
-}
-
-function send_subscription_product2_request($access_token, $msisdn) {
-    $url = DJEZZY_BASE_URL . "/djezzy-api/api/v1/subscribers/$msisdn/subscription-product?include=";
-    
-    $headers = [
-        "Content-Type: application/json",
-        "Authorization: Bearer $access_token",
-        "User-Agent: Dalvik/2.1.0 (Linux; U; Android 8.0; OS-G23 Build/MRA58K)",
-        "Host: apim.djezzy.dz",
-        "x-csrf-token: " . CSRF_TOKEN_SUBSCRIPTION,
-        "Connection: Keep-Alive",
-        "Accept-Encoding: gzip"
-    ];
-    
-    $data = [
-        "data" => [
-            "id" => "BTLINTSPEEDDAY2Go",
-            "type" => "products"
-        ]
-    ];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    
-    return $http_code == 200;
-}
-
-function send_subscription_1go_request($access_token, $msisdn) {
-    $url = DJEZZY_BASE_URL . "/djezzy-api/api/v1/subscribers/$msisdn/subscription-product?include=";
-    
-    $headers = [
-        "User-Agent: Djezzy/2.7.5",
-        "Connection: Keep-Alive",
-        "Accept: */*",
-        "Accept-Encoding: gzip",
-        "Authorization: Bearer $access_token",
-        "Content-Type: application/json; charset=utf-8",
-        "x-csrf-token: " . CSRF_TOKEN_1GO
-    ];
-    
-    $data = [
-        "data" => [
-            "id" => "DOVINTSPEEDDAY1GoPRE",
-            "type" => "products"
-        ]
-    ];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    
-    return $http_code == 200;
-}
-
-function send_subscription_1gofb_request($access_token, $msisdn) {
-    $url = DJEZZY_BASE_URL . "/djezzy-api/api/v1/subscribers/$msisdn/subscription-product?include=";
-    
-    $headers = [
-        'User-Agent: Djezzy/2.7.5',
-        'Connection: Keep-Alive',
-        'Accept-Encoding: gzip',
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $access_token,
-        'x-csrf-token: ' . CSRF_TOKEN_1GO_FB
-    ];
-    
-    $data = [
-        "data" => [
-            "id" => "1GBFB3DAY",
-            "type" => "products"
-        ]
-    ];
+        ];
+    }
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -705,6 +599,84 @@ function send_invitation_request($access_token, $msisdn, $b_number) {
     return [false, "UNKNOWN_ERROR"];
 }
 
+// تعريف مصفوفة الـ quick replies مرة واحدة
+function get_quick_replies() {
+    return [
+        [
+            "content_type" => "text",
+            "title" => "معلومات البطاقة📱",
+            "payload" => "SIM_CARD_INFO"
+        ],
+        [
+            "content_type" => "text",
+            "title" => "تفعيل 2G🎉🎁",
+            "payload" => "GIFTWALKWIN"
+        ],
+        [
+            "content_type" => "text",
+            "title" => "عرض🔖70دج[4جيقا]",
+            "payload" => "BTLINTSPEEDDAY2Go"
+        ],
+        [
+            "content_type" => "text",
+            "title" => "عرض 1Go/100Da🎁❤️",
+            "payload" => "DOVINTSPEEDDAY1GoPRE"
+        ],
+        [
+            "content_type" => "text",
+            "title" => "1GO/FB/70Da/3أيام🎉",
+            "payload" => "1GBFB3DAY"
+        ],
+        [
+            "content_type" => "text",
+            "title" => "ارسال دعوة",
+            "payload" => "SEND_INVITATION"
+        ]
+    ];
+}
+
+// تعريف headers للعروض المختلفة
+function get_subscription_headers($product_type) {
+    $headers = [];
+    
+    switch($product_type) {
+        case 'GIFTWALKWIN':
+        case 'BTLINTSPEEDDAY2Go':
+            $headers = [
+                "Content-Type: application/json",
+                "User-Agent: Dalvik/2.1.0 (Linux; U; Android 8.0; OS-G23 Build/MRA58K)",
+                "Host: apim.djezzy.dz",
+                "x-csrf-token: " . CSRF_TOKEN_SUBSCRIPTION,
+                "Connection: Keep-Alive",
+                "Accept-Encoding: gzip"
+            ];
+            break;
+            
+        case 'DOVINTSPEEDDAY1GoPRE':
+            $headers = [
+                "User-Agent: Djezzy/2.7.5",
+                "Connection: Keep-Alive",
+                "Accept: */*",
+                "Accept-Encoding: gzip",
+                "Content-Type: application/json; charset=utf-8",
+                "x-csrf-token: " . CSRF_TOKEN_1GO
+            ];
+            break;
+            
+        case '1GBFB3DAY':
+            $headers = [
+                'User-Agent: Djezzy/2.7.5',
+                'Connection: Keep-Alive',
+                'Accept-Encoding: gzip',
+                'Content-Type: application/json',
+                'x-csrf-token: ' . CSRF_TOKEN_1GO_FB
+            ];
+            break;
+    }
+    
+    return $headers;
+}
+
 // الوظيفة الرئيسية لمعالجة الرسائل
 function handle_message($sender_id, $message_text) {
     $user_state = get_user_session($sender_id);
@@ -742,39 +714,7 @@ function handle_message($sender_id, $message_text) {
                 send_facebook_message($sender_id, "🔓 مرحباً بعودتك! الرقم $display_msisdn مسجل مسبقاً.");
                 list($success, $access_token) = get_access_token_for_user($formatted_msisdn);
                 if ($success) {
-                    $quick_replies = [
-                        [
-                            "content_type" => "text",
-                            "title" => "معلومات البطاقة📱",
-                            "payload" => "SIM_CARD_INFO"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "تفعيل 2G🎉🎁",
-                            "payload" => "GIFTWALKWIN"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "عرض🔖70دج[4جيقا]",
-                            "payload" => "BTLINTSPEEDDAY2Go"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "عرض 1Go/100Da🎁❤️",
-                            "payload" => "DOVINTSPEEDDAY1GoPRE"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "1GO/FB/70Da/3أيام🎉",
-                            "payload" => "1GBFB3DAY"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "ارسال دعوة",
-                            "payload" => "SEND_INVITATION"
-                        ]
-                    ];
-                    send_facebook_message($sender_id, "اختر الخدمة 🔖:", $quick_replies);
+                    send_facebook_message($sender_id, "اختر الخدمة 🔖:", get_quick_replies());
                     $user_state = [
                         "stage" => "awaiting_confirmation", 
                         "msisdn" => $formatted_msisdn, 
@@ -824,39 +764,7 @@ function handle_message($sender_id, $message_text) {
                 if ($success) {
                     save_user_to_db($user_state["msisdn"], $refresh_token, $access_token);
                     
-                    $quick_replies = [
-                        [
-                            "content_type" => "text",
-                            "title" => "معلومات البطاقة📱",
-                            "payload" => "SIM_CARD_INFO"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "تفعيل 2G🎉🎁",
-                            "payload" => "GIFTWALKWIN"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "عرض🔖70دج[4جيقا]",
-                            "payload" => "BTLINTSPEEDDAY2Go"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "عرض 1Go/100Da🎁❤️",
-                            "payload" => "DOVINTSPEEDDAY1GoPRE"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "1GO/FB/70Da/3أيام🎉",
-                            "payload" => "1GBFB3DAY"
-                        ],
-                        [
-                            "content_type" => "text",
-                            "title" => "ارسال دعوة",
-                            "payload" => "SEND_INVITATION"
-                        ]
-                    ];
-                    send_facebook_message($sender_id, "🎉 تم تسجيل رقمك بنجاح! الآن يمكنك استخدامه بدون رمز في المرة القادمة.\n\nاختر الخدمة 🔖:", $quick_replies);
+                    send_facebook_message($sender_id, "🎉 تم تسجيل رقمك بنجاح! الآن يمكنك استخدامه بدون رمز في المرة القادمة.\n\nاختر الخدمة 🔖:", get_quick_replies());
                     $user_state = [
                         "stage" => "awaiting_confirmation", 
                         "msisdn" => $user_state["msisdn"], 
@@ -876,7 +784,18 @@ function handle_message($sender_id, $message_text) {
         }
     
     } elseif ($user_state["stage"] == "awaiting_confirmation") {
-        if ($message_text == "معلومات البطاقة📱") {
+        $product_map = [
+            "معلومات البطاقة📱" => "SIM_CARD_INFO",
+            "تفعيل 2G🎉🎁" => "GIFTWALKWIN",
+            "عرض🔖70دج[4جيقا]" => "BTLINTSPEEDDAY2Go",
+            "عرض 1Go/100Da🎁❤️" => "DOVINTSPEEDDAY1GoPRE",
+            "1GO/FB/70Da/3أيام🎉" => "1GBFB3DAY",
+            "ارسال دعوة" => "SEND_INVITATION"
+        ];
+
+        $selected_option = $product_map[$message_text] ?? null;
+
+        if ($selected_option === "SIM_CARD_INFO") {
             send_facebook_message($sender_id, "⏳ جاري استرجاع معلومات البطاقة...");
             list($success, $sim_info) = get_sim_card_info($user_state["access_token"], $user_state["msisdn"]);
             if ($success) {
@@ -886,86 +805,28 @@ function handle_message($sender_id, $message_text) {
                 send_facebook_message($sender_id, "❌ $sim_info");
             }
             
-            // العودة للقائمة الرئيسية
-            $quick_replies = [
-                [
-                    "content_type" => "text",
-                    "title" => "معلومات البطاقة📱",
-                    "payload" => "SIM_CARD_INFO"
-                ],
-                [
-                    "content_type" => "text",
-                    "title" => "تفعيل 2G🎉🎁",
-                    "payload" => "GIFTWALKWIN"
-                ],
-                [
-                    "content_type" => "text",
-                    "title" => "عرض🔖70دج[4جيقا]",
-                    "payload" => "BTLINTSPEEDDAY2Go"
-                ],
-                [
-                    "content_type" => "text",
-                    "title" => "عرض 1Go/100Da🎁❤️",
-                    "payload" => "DOVINTSPEEDDAY1GoPRE"
-                ],
-                [
-                    "content_type" => "text",
-                    "title" => "1GO/FB/70Da/3أيام🎉",
-                    "payload" => "1GBFB3DAY"
-                ],
-                [
-                    "content_type" => "text",
-                    "title" => "ارسال دعوة",
-                    "payload" => "SEND_INVITATION"
-                ]
-            ];
-            send_facebook_message($sender_id, "اختر خدمة أخرى:", $quick_replies);
+            send_facebook_message($sender_id, "اختر خدمة أخرى:", get_quick_replies());
         
-        } elseif ($message_text == "تفعيل 2G🎉🎁") {
-            $subscription_success = send_subscription_product1_request($user_state["access_token"], $user_state["msisdn"]);
+        } elseif (in_array($selected_option, ["GIFTWALKWIN", "BTLINTSPEEDDAY2Go", "DOVINTSPEEDDAY1GoPRE", "1GBFB3DAY"])) {
+            $headers = get_subscription_headers($selected_option);
+            $subscription_success = send_subscription_request($user_state["access_token"], $user_state["msisdn"], $selected_option, $headers);
+            
             if ($subscription_success) {
                 $display_msisdn = substr($user_state['msisdn'], 3, 4) . "xxxx" . substr($user_state['msisdn'], -2);
-                send_facebook_message($sender_id, "🎉 $display_msisdn تم تفعيل 2G بنجاح!");
-            } else {
-                send_facebook_message($sender_id, "⚠️ حدث خطأ - يبدو انك سجلت مسبقاً ولم تكمل اسبوعا 📆");
-            }
-            $user_state = ["stage" => "awaiting_msisdn"];
-            save_user_session($sender_id, $user_state);
-        
-        } elseif ($message_text == "عرض🔖70دج[4جيقا]") {
-            $subscription_success = send_subscription_product2_request($user_state["access_token"], $user_state["msisdn"]);
-            if ($subscription_success) {
-                $display_msisdn = substr($user_state['msisdn'], 3, 4) . "xxxx" . substr($user_state['msisdn'], -2);
-                send_facebook_message($sender_id, "🎉 $display_msisdn تم تفعيل العرض بنجاح! 😁");
+                $success_messages = [
+                    "GIFTWALKWIN" => "🎉 $display_msisdn تم تفعيل 2G بنجاح!",
+                    "BTLINTSPEEDDAY2Go" => "🎉 $display_msisdn تم تفعيل العرض بنجاح! 😁",
+                    "DOVINTSPEEDDAY1GoPRE" => "🎉 $display_msisdn تم تفعيل عرض 1Go/100Da بنجاح! 😁",
+                    "1GBFB3DAY" => "🎉 $display_msisdn تم تفعيل عرض 1GO/FB/70Da/3أيام بنجاح! 😁"
+                ];
+                send_facebook_message($sender_id, $success_messages[$selected_option]);
             } else {
                 send_facebook_message($sender_id, "⚠️ حدث خطا - رصيدك غير كافي💰 لتفعيل هذا العرض🔖");
             }
             $user_state = ["stage" => "awaiting_msisdn"];
             save_user_session($sender_id, $user_state);
         
-        } elseif ($message_text == "عرض 1Go/100Da🎁❤️") {
-            $subscription_success = send_subscription_1go_request($user_state["access_token"], $user_state["msisdn"]);
-            if ($subscription_success) {
-                $display_msisdn = substr($user_state['msisdn'], 3, 4) . "xxxx" . substr($user_state['msisdn'], -2);
-                send_facebook_message($sender_id, "🎉 $display_msisdn تم تفعيل عرض 1Go/100Da بنجاح! 😁");
-            } else {
-                send_facebook_message($sender_id, "⚠️ حدث خطا - رصيدك غير كافي💰 لتفعيل هذا العرض🔖");
-            }
-            $user_state = ["stage" => "awaiting_msisdn"];
-            save_user_session($sender_id, $user_state);
-        
-        } elseif ($message_text == "1GO/FB/70Da/3أيام🎉") {
-            $subscription_success = send_subscription_1gofb_request($user_state["access_token"], $user_state["msisdn"]);
-            if ($subscription_success) {
-                $display_msisdn = substr($user_state['msisdn'], 3, 4) . "xxxx" . substr($user_state['msisdn'], -2);
-                send_facebook_message($sender_id, "🎉 $display_msisdn تم تفعيل عرض 1GO/FB/70Da/3أيام بنجاح! 😁");
-            } else {
-                send_facebook_message($sender_id, "⚠️ حدث خطا - رصيدك غير كافي💰 لتفعيل هذا العرض🔖");
-            }
-            $user_state = ["stage" => "awaiting_msisdn"];
-            save_user_session($sender_id, $user_state);
-        
-        } elseif ($message_text == "ارسال دعوة") {
+        } elseif ($selected_option === "SEND_INVITATION") {
             send_facebook_message($sender_id, "الرجاء إدخال رقم الهاتف الذي تريد إرسال الدعوة إليه (يجب أن يبدأ بـ 07):");
             $user_state = [
                 "stage" => "awaiting_invitation_number", 
@@ -1074,4 +935,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     http_response_code(405);
     echo json_encode(["error" => "Method not allowed"]);
 }
-?>
+
+ob_end_flush(); // إرسال المحتوى في النهاية
