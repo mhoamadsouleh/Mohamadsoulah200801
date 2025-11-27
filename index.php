@@ -13,7 +13,7 @@ function getWebhookUrl() {
 }
 
 // config.php
-define('FACEBOOK_PAGE_ACCESS_TOKEN', getenv('FACEBOOK_PAGE_ACCESS_TOKEN') ?: 'EAARRlvmJ1MMBO0wsO1KsTftohbeoQP26s3sErFqMz87Ewtw0rZCSOkafb8C7ZCWpILLpcwnFNSiZABgOj7mYdOzPrKJ5WjCm6NVQD2ijl70MalskCOFk8HcZAr1k0XEJhWqOo2R61xGm2mQYFKccPmu06ae7bhPa7omiNmiE1jUk5Q5Tsf0eOb2u9McLLDsjAyHcSntr6QZDZD');
+define('FACEBOOK_PAGE_ACCESS_TOKEN', getenv('FACEBOOK_PAGE_ACCESS_TOKEN') ?: 'EABC5rFVuO3cBQPTsdEpdTdz6YECflHWUwpvPfMbUHpDEfV2QiJ5oPG3o8IN0pDvge3XJMijUfeDI14bdXQa9LGEiXvUJs6oXi3oGclOSn1qHykRr6KgNdRjKxmgku5vCrYqHoZA6ZA0VTKzkif3JQwZCt1ZBeID1KHiaTOZBsGkcBetWEID0bIiaB9UPakCr5R3XrCTflwQZDZD');
 define('FACEBOOK_GRAPH_API_URL', 'https://graph.facebook.com/v11.0/me/messages');
 define('DB_PATH', '/tmp/users.db');
 
