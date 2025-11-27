@@ -1,0 +1,23 @@
+{
+    "name": "facebook-djezzy-bot",
+    "description": "Facebook Messenger Bot for Djezzy Algeria",
+    "type": "project",
+    "require": {
+        "php": "^8.0",
+        "ext-curl": "*",
+        "ext-sqlite3": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "vercel/vercel": "^0.6.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "your.email@example.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
